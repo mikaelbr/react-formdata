@@ -1,14 +1,14 @@
 {
-  "name": "example",
+  "name": "react-formdata-example",
   "version": "1.0.0",
-  "description": "",
+  "description": "Example using react-formdata",
   "main": "demo.js",
   "scripts": {
     "build": "browserify -t babelify demo.js -o example.js"
   },
-  "keywords": [],
+  "keywords": ["react", "react-formdata", "example"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.2.1",
     "babel-plugin-transform-react-jsx": "^6.2.0",

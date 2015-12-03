@@ -1,8 +1,8 @@
 {
   "name": "react-formdata",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A library for generating an object of values from a set of inputs in React",
+  "main": "lib/formdata.js",
   "scripts": {
     "test": "mocha --compilers js:babel-core/register  --require ./tests/test-bootstrap.js tests/*-test.js",
     "prebuild": "rm -rf lib",
@@ -10,9 +10,9 @@
     "build": "babel src --out-dir lib",
     "prepublish": "npm run build"
   },
-  "keywords": [],
+  "keywords": ["react", "form data", "form"],
   "author": "Mikael Brevik <mikaelbre@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.2.0",
     "babel-core": "^6.2.1",
