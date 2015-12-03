@@ -1,0 +1,30 @@
+{
+  "name": "react-formdata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rm -rf lib",
+    "lint": "semistandard src/formdata.js",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build"
+  },
+  "keywords": [],
+  "author": "Mikael Brevik <mikaelbre@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.2.0",
+    "babel-core": "^6.2.1",
+    "babel-preset-es2015": "^6.1.18",
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "semistandard": "^7.0.4"
+  },
+  "peerDependencies": {
+    "react": "^0.14.3"
+  },
+  "dependencies": {
+    "react-dom": "^0.14.3"
+  }
+}
