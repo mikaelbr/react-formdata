@@ -5,24 +5,25 @@ module.exports = formComponent;
 
 function formComponent (ChildComponent) {
   return React.createClass({
-    addInput (name) {
+
+    addInput: function (name) {
       return (ref) => {
         if (!this.customInputs) { this.customInputs = {}; }
         this.customInputs[name] = ref;
       };
     },
 
-    getInputs () {
+    getInputs: function () {
       const root = findDOMNode(this);
       return [...root.querySelectorAll('input, select, textarea')];
     },
 
-    getValues () {
+    getValues: function () {
       const { valueMapper = identity } = this.props;
       return valueMapper(getValuesFromInputs(this.getInputs(), this.customInputs));
     },
 
-    render () {
+    render: function () {
       const { onChange = noop } = this.props;
       return React.createElement(ChildComponent, Object.assign({}, this.props, {
         addInput: this.addInput,

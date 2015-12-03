@@ -1,6 +1,5 @@
 var formData = require('../src/formData');
-var { render, findDOMNode } = require('react-dom');
-var React = require('react');
+var { render } = require('react-dom');
 
 function MyForm ({ title, ocHook }) {
   return (
@@ -44,4 +43,4 @@ const App = function () {
   );
 };
 
-render(<App />, document.querySelector('#app'))
+render(<App />, document.querySelector('#app'));
