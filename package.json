@@ -6,11 +6,16 @@
   "scripts": {
     "test": "mocha --compilers js:babel-core/register  --require ./tests/test-bootstrap.js tests/*-test.js",
     "prebuild": "rm -rf lib",
-    "lint": "eslint src/formdata.js example/demo.js",
     "build": "babel src --out-dir lib",
+    "docs": "jsdoc2md src/formdata.js",
+    "lint": "eslint src/formdata.js example/demo.js",
     "prepublish": "npm run build"
   },
-  "keywords": ["react", "form data", "form"],
+  "keywords": [
+    "react",
+    "form data",
+    "form"
+  ],
   "author": "Mikael Brevik <mikaelbre@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +29,7 @@
     "eslint": "^1.10.3",
     "eslint-config-standard": "^4.4.0",
     "eslint-plugin-react": "^3.11.2",
+    "jsdoc-to-markdown": "^1.2.1",
     "jsdom": "^7.1.1",
     "mocha": "^2.3.4",
     "react-addons-test-utils": "^0.14.3"
