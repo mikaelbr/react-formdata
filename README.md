@@ -47,17 +47,24 @@ Injects the following properties to the decorated component.
 Using onChange hook to aggregate and create a common onChange listener with data
 ```jsx
 // `ocHook` is injected from `formData`:
-var MyForm = formData(function ({ ocHook }) {
+var MyForm = formData(function ({ addInput, ocHook }) {
   return (
     <ol>
       <li><input id="a" type="text" onChange={ocHook} value="Hello World" /></li>
-      <li><textarea id="b" placeholder="Number" onChange={ocHook}>Hello World</textarea></li>
+      <li><textarea ref={addInput('b')} onChange={ocHook}>Hello World</textarea></li>
     </ol>
   );
 });
 const App = function () {
   return <DecoratedMyForm onChange={(values) => console.log(values)} />;
 };
+```
+Outputs something like
+```json
+{
+  "a": "Hello World",
+  "b": "Hello World"
+}
 ```
 
 Returned formData decorated `Component`: A React Component with the added behaviour of form data handling.

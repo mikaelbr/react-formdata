@@ -22,11 +22,11 @@ module.exports = formComponent;
  * Using onChange hook to aggregate and create a common onChange listener with data
  * ```jsx
  * // `ocHook` is injected from `formData`:
- * var MyForm = formData(function ({ ocHook }) {
+ * var MyForm = formData(function ({ addInput, ocHook }) {
  *   return (
  *     <ol>
  *       <li><input id="a" type="text" onChange={ocHook} value="Hello World" /></li>
- *       <li><textarea id="b" placeholder="Number" onChange={ocHook}>Hello World</textarea></li>
+ *       <li><textarea ref={addInput('b')} onChange={ocHook}>Hello World</textarea></li>
  *     </ol>
  *   );
  * });
@@ -34,6 +34,14 @@ module.exports = formComponent;
  *   return <DecoratedMyForm onChange={(values) => console.log(values)} />;
  * };
  * ```
+ * Outputs something like
+ * ```json
+ * {
+ *   "a": "Hello World",
+ *   "b": "Hello World"
+ * }
+ * ```
+ *
  *
  * Returned formData decorated `Component`: A React Component with the added behaviour of form data handling.
  * All properties passed to decorated component, is transitive. This means it will be passed to the
