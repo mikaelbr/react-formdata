@@ -1,7 +1,7 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 
-module.exports = formComponent;
+module.exports = formData;
 
 /**
  * Creates a higher order component for easier form data handling using React. Especially handy
