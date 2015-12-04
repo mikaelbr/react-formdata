@@ -1,9 +1,5 @@
 # react-formdata
 
-> **Note:** Library not published to NPM yet, but will be soon. Still in concept phase. Feel free
-> to test it out by installing the master (`npm i mikaelbr/react-formdata`) and let me know
-> what you think by Github Issues.
-
 A library for generating an object of values from a set of inputs in React. Either by auto detecting
 all inputs with an ID, or manually adding inputs with specified name.
 
