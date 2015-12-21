@@ -16,6 +16,14 @@ function MyForm ({ title, ocHook }) {
               <option value="bye">Bye</option>
             </select>
           </li>
+          <li>
+            <input id="e" type="radio" name="e" value="foo" onChange={ocHook} />
+            <input type="radio" name="e" value="bar" onChange={ocHook} />
+          </li>
+          <li>
+            <input id="f" type="checkbox" name="f" onChange={ocHook} />
+            <input id="g" type="checkbox" name="g" onChange={ocHook} />
+          </li>
         </ol>
 
         <input id="submit" type="submit" value="Send" />

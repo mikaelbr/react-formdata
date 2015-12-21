@@ -125,11 +125,13 @@ function formData (ChildComponent) {
 }
 
 function getValuesFromInputs (inputs, extra = {}) {
+  const both = inputs.concat(toList(extra));
   const fromInputs = inputs.filter(includableInput).reduce((acc, input) =>
-    Object.assign({}, acc, { [input.id]: getTypedValue(input) }), {});
+    Object.assign({}, acc, { [input.id]: getTypedValue(input, both) }), {});
+  const fromExtra = Object.keys(extra).reduce((acc, key) =>
+    Object.assign({}, acc, { [key]: getTypedValue(extra[key], both) }), {})
 
-  return Object.assign({}, fromInputs, Object.keys(extra).reduce((acc, key) =>
-    Object.assign({}, acc, { [key]: getTypedValue(extra[key]) }), {}));
+  return Object.assign({}, fromInputs, fromExtra);
 }
 
 function includableInput ({ type, id }) {
@@ -139,9 +141,27 @@ function includableInput ({ type, id }) {
 function noop () { }
 function identity (i) { return i; }
 
-function getTypedValue (input) {
+function getTypedValue (input, list) {
   if (input.type && input.type === 'number') {
     return parseInt(input.value, 10);
   }
+  if (input.type && input.type === 'checkbox') {
+    return input.checked;
+  }
+  if (input.type && input.type === 'radio') {
+    return getCheckedItemFromListWithName(list, input.name);
+  }
   return input.value;
+}
+
+function getCheckedItemFromListWithName (list, name) {
+  var selected = list
+    .filter(item => item.checked && item.name === name)
+    .map(item => item.value);
+  if (!selected || !selected.length) return void 0;
+  return selected[0];
+}
+
+function toList (obj) {
+  return Object.keys(obj).map(k => obj[k]);
 }
