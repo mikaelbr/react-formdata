@@ -1,10 +1,8 @@
 # react-formdata
 
-A library for generating an object of values from a set of inputs in React. Either by auto detecting
-all inputs with an ID, or manually adding inputs with specified name.
+A library for generating an object of values from a set of inputs in React. Either by auto detecting all inputs with name, an ID or by manually adding inputs with specified name.
 
-This is handy in cases where you want to dispatch an action to a global state and don't want the
-boiler plate of extracting all values yourself. See example below for usage.
+This is handy in cases where you want to dispatch an action to a global state and don't want the boiler plate of extracting all values yourself. See example below for usage.
 
 ## Install
 
@@ -16,8 +14,9 @@ $ npm install --save react-formdata
 
 ## Usage
 
-### formData(Decoratee) ⇒ <code>Component</code>
+Tip: See the [example](https://github.com/mikaelbr/react-formdata/tree/master/example) or the [tests](https://github.com/mikaelbr/react-formdata/blob/master/tests/formdata-test.js) for short examples of usage.
 
+## formData(Decoratee) ⇒ <code>Component</code>
 Creates a higher order component for easier form data handling using React. Especially handy
 when using global application state and a functional style approach to UI development.
 
@@ -28,18 +27,20 @@ a different name, you can map it or use the injected `addInput` to explicitly ad
 form input with a name. This is also useful in cases where you don't want an ID on
 your input data.
 
+The precedence order for naming is: `Manual > Name attribute > ID attribute`
+
 Injects the following properties to the decorated component.
 * `addInput(inputName)` - Manually add input, with data name specified as argument
 * `ocHook(synteticEvent)` - onChange hook. Use this when you want onChange to be triggered. Most cases every input in your decoratee should have a `onChange={ocHook}`. Is composable
 
-**Kind**: module
-**Returns**: <code>Component</code> - Decorated Component - The newly derived component with additional behaviour.
+**Kind**: global function  
+**Returns**: <code>Component</code> - Decorated Component - The newly derived component with additional behaviour.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | Decoratee | <code>Component</code> | component you'd like to decorate with form data behaviour. |
 
-**Example**
+**Example**  
 Using onChange hook to aggregate and create a common onChange listener with data
 ```jsx
 // `ocHook` is injected from `formData`:
@@ -63,6 +64,7 @@ Outputs something like
 }
 ```
 
+
 Returned formData decorated `Component`: A React Component with the added behaviour of form data handling.
 All properties passed to decorated component, is transitive. This means it will be passed to the
 decoratee. In addition, two properties are injected to the decoratee; `addInput` and `ocHook`. @see formData
@@ -72,7 +74,7 @@ Decorated component has two props callbacks you can use:
 * `onChange(Object)` - callback triggered when some of the decoratee triggers the on change hook. Is called with data values as argument.
 
 In addition to props, you can use React refs to get the initial value when component is mounted:
-**Example**
+**Example**  
 ```jsx
 <DecoratedForm ref={function (inputRef) {
   // Now the node is mounted, and we have a ref to it. We can access data and inputs:

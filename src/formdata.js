@@ -14,6 +14,8 @@ module.exports = formData;
  * form input with a name. This is also useful in cases where you don't want an ID on
  * your input data.
  *
+ * The precedence order for naming is: `Manual > Name attribute > ID attribute`
+ *
  * Injects the following properties to the decorated component.
  * * `addInput(inputName)` - Manually add input, with data name specified as argument
  * * `ocHook(synteticEvent)` - onChange hook. Use this when you want onChange to be triggered. Most cases every input in your decoratee should have a `onChange={ocHook}`. Is composable

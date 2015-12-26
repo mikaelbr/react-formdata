@@ -6,6 +6,32 @@ const formData = require('../src/formdata');
 
 describe('formdata', function () {
   describe('on mount', function () {
+    it('should include all inputs with name', function (done) {
+      const MyForm = formData(() =>
+        <p>
+          <input name="a" type="text" readOnly="readOnly" value="Hello World"/>
+          <input name="b" type="text" readOnly="readOnly" value="Bye World"/>
+        </p>
+      );
+      renderAndExpect(MyForm, {
+        a: 'Hello World',
+        b: 'Bye World'
+      }, done);
+    });
+
+    it('should include all inputs with id', function (done) {
+      const MyForm = formData(() =>
+        <p>
+          <input id="a" type="text" readOnly="readOnly" value="Hello World"/>
+          <input id="b" type="text" readOnly="readOnly" value="Bye World"/>
+        </p>
+      );
+      renderAndExpect(MyForm, {
+        a: 'Hello World',
+        b: 'Bye World'
+      }, done);
+    });
+
     it('should be able to return values from text', function (done) {
       const MyForm = formData(() =>
         <p><input id="a" type="text" readOnly="readOnly" value="Hello World"/></p>
@@ -122,7 +148,7 @@ describe('formdata', function () {
       }, done);
     });
 
-    it('should allow name to take precidence over id', function (done) {
+    it('should allow name to take precedence over id', function (done) {
       const MyForm = formData(() =>
         <p><input id="a" name="z" type="text" readOnly="readOnly" value="Hello World"/></p>
       );
