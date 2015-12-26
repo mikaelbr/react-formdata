@@ -93,6 +93,13 @@ describe('formdata', function () {
         z: 'b'
       }, done);
     });
+
+    it('should allow name to take precidence over id', function (done) {
+      const MyForm = formData(() =>
+        <p><input id="a" name="z" type="text" readOnly="readOnly" value="Hello World"/></p>
+      );
+      renderAndExpect(MyForm, { z: 'Hello World' }, done);
+    });
   });
 
   describe('mapping', function () {
