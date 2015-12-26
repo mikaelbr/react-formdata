@@ -42,7 +42,7 @@ describe('formdata', function () {
     it('should be able to return values from select', function (done) {
       const MyForm = formData(() =>
         <div>
-          <select value="a" id="a">
+          <select value="a" id="a" readOnly="readOnly">
             <option value="a">A</option>
             <option value="b">B</option>
             <option value="c">C</option>
@@ -55,7 +55,7 @@ describe('formdata', function () {
     it('should be able to return values from select with multiple values', function (done) {
       const MyForm = formData(() =>
         <div>
-          <select id="input" value={['b', 'c']} multiple={true}>
+          <select id="input" value={['b', 'c']} readOnly="readOnly" multiple={true}>
             <option value="a">A</option>
             <option value="b">B</option>
             <option value="c">C</option>
