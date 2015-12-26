@@ -102,6 +102,70 @@ describe('formdata', function () {
     });
   });
 
+  describe('onChange', function () {
+    it('should be able to return values from text', function (done) {
+      const expected = 'Foobar';
+      const MyForm = formData(({ocHook}) =>
+        <p><input id="a" onChange={ocHook} type="text" value="Hello World"/></p>
+      );
+      renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done);
+    });
+
+    it('should be able to return values from textarea', function (done) {
+      const expected = 'Foobar';
+      const MyForm = formData(({ocHook}) =>
+        <p><textarea id="a" onChange={ocHook} value="Hello World"></textarea></p>
+      );
+      renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done, 'textarea');
+    });
+
+    it('should be able to return values from number', function (done) {
+      const expected = 50;
+      const MyForm = formData(({ocHook}) =>
+        <p><input id="a" onChange={ocHook} type="number" value="42"/></p>
+      );
+      renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done);
+    });
+
+    it('should be able to return values from checkboxes', function (done) {
+      const MyForm = formData(({ocHook}) =>
+        <div>
+          <p><input id="a" onChange={ocHook} type="checkbox" checked="checked"/></p>
+          <p><input id="b" onChange={ocHook} type="checkbox" /></p>
+          <p><input id="c" onChange={ocHook} type="checkbox" checked="checked"/></p>
+        </div>
+      );
+
+      var out = renderAndExpectOnChange(MyForm, {
+        a: true,
+        b: true,
+        c: true
+      }, done);
+
+      const node = findDOMNode(out).querySelector('#b');
+      node.checked = true;
+      Simulate.change(node);
+    });
+
+    it('should be able to return values from radios grouped by name', function (done) {
+      const MyForm = formData(({ocHook}) =>
+        <div>
+          <p><input name="x" onChange={ocHook} type="radio" value="a" /></p>
+          <p><input name="x" onChange={ocHook} id="b" type="radio" value="b" /></p>
+          <p><input name="x" onChange={ocHook} type="radio" value="c" checked="checked"/></p>
+        </div>
+      );
+
+      const out = renderAndExpectOnChange(MyForm, {
+        x: 'b'
+      }, done);
+
+      const node = findDOMNode(out).querySelector('#b');
+      node.checked = true;
+      Simulate.change(node);
+    });
+  });
+
   describe('mapping', function () {
     it('should respect mapping on mount', function (done) {
       const expected = { a: 'HELLO WORLD' };
@@ -139,10 +203,31 @@ describe('formdata', function () {
   });
 });
 
-function renderAndExpect (Component, data, done) {
+function renderAndExpect (Component, expected, done) {
   const refListener = function (ref) {
-    assert.deepEqual(ref.getValues(), data);
+    assert.deepEqual(ref.getValues(), expected);
     done();
   };
   renderIntoDocument(<Component ref={refListener} />);
+}
+
+function renderAndExpectWhenChangeTriggered (Comp, expected, change, done, type = 'input') {
+  const onChangeListener = function (data) {
+    assert.deepEqual(data, expected);
+    done();
+  };
+
+  const out = renderIntoDocument(<Comp onChange={onChangeListener} />);
+  const node = findDOMNode(out).querySelector(type);
+  node.value = change;
+  Simulate.change(node);
+}
+
+function renderAndExpectOnChange (Comp, expected, done) {
+  const onChangeListener = function (data) {
+    assert.deepEqual(data, expected);
+    done();
+  };
+
+  return renderIntoDocument(<Comp onChange={onChangeListener} />);
 }
