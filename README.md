@@ -1,4 +1,4 @@
-# react-formdata
+# react-formdata [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
 A library for generating an object of values from a set of inputs in React. Either by auto detecting all inputs with name, an ID or by manually adding inputs with specified name.
 
@@ -105,3 +105,10 @@ $ npm install
 $ npm run build
 $ open index.html
 ```
+
+[npm-url]: https://npmjs.org/package/react-formdata
+[npm-image]: http://img.shields.io/npm/v/react-formdata.svg?style=flat
+[npm-downloads]: http://img.shields.io/npm/dm/react-formdata.svg?style=flat
+
+[travis-url]: http://travis-ci.org/mikaelbr/react-formdata
+[travis-image]: http://img.shields.io/travis/mikaelbr/react-formdata.svg?style=flat
