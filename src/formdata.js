@@ -68,7 +68,6 @@ module.exports = formData;
  * @returns {Component} Decorated Component - The newly derived component with additional behaviour.
  **/
 function formData (ChildComponent) {
-
   /**
    * formData decorated `Component`. A React Component with the added behaviour of form data handling.
    * All properties passed to decorated component, is transitive. This means it will be passed to the
@@ -125,17 +124,42 @@ function formData (ChildComponent) {
 }
 
 function getValuesFromInputs (inputs, extra = {}) {
-  const both = inputs.concat(toList(extra));
-  const fromInputs = inputs.filter(includableInput).reduce((acc, input) =>
-    Object.assign({}, acc, { [input.id]: getTypedValue(input, both) }), {});
+  const extraList = toList(extra);
+  const both = inputs.concat(extraList);
+
+  const fromInputs = inputs
+    .filter(includableInput)
+    .filter(includeItemsNotInList(extraList))
+    .reduce((acc, input) =>
+      Object.assign({}, acc, {
+        [input.name || input.id]: getTypedValue(input, both)
+      }), {});
+
   const fromExtra = Object.keys(extra).reduce((acc, key) =>
-    Object.assign({}, acc, { [key]: getTypedValue(extra[key], both) }), {})
+    Object.assign({}, acc, {
+      [key]: getTypedValue(extra[key], both)
+    }), {});
 
   return Object.assign({}, fromInputs, fromExtra);
 }
 
-function includableInput ({ type, id }) {
-  return !(!id || type === 'submit' || type === 'button');
+function includableInput ({ type, id, name }) {
+  const hasNameOrId = !!id || !!name;
+  return hasNameOrId && type !== 'submit' && type !== 'button';
+}
+
+function includeItemsNotInList (list) {
+  return (item) => !isInList(list, item);
+}
+
+function isInList (list, {name, id}) {
+  return list.some(({name: oName, id: oId}) =>
+     name === oName || id === oId);
+}
+
+function logEachNameOrId (inputs = []) {
+  inputs.forEach(({id, name}) =>
+    console.log('Id:', id, 'Name:', name));
 }
 
 function noop () { }
