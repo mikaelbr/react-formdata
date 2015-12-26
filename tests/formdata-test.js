@@ -1,5 +1,6 @@
 const { assert } = require('chai');
-const { renderIntoDocument } = require('react-addons-test-utils');
+const { renderIntoDocument, Simulate } = require('react-addons-test-utils');
+const { findDOMNode } = require('react-dom');
 
 const formData = require('../src/formdata');
 
@@ -9,21 +10,21 @@ describe('formdata', function () {
       const MyForm = formData(() =>
         <p><input id="a" type="text" readOnly="readOnly" value="Hello World"/></p>
       );
-      renderComponentWithExpectedData(MyForm, { a: 'Hello World' }, done);
+      renderAndExpect(MyForm, { a: 'Hello World' }, done);
     });
 
     it('should be able to return values from textarea', function (done) {
       const MyForm = formData(() =>
         <p><textarea id="a" readOnly="readOnly" value="Hello World"></textarea></p>
       );
-      renderComponentWithExpectedData(MyForm, { a: 'Hello World' }, done);
+      renderAndExpect(MyForm, { a: 'Hello World' }, done);
     });
 
     it('should be able to return values from number', function (done) {
       const MyForm = formData(() =>
         <p><input id="a" type="number" readOnly="readOnly" value="42"/></p>
       );
-      renderComponentWithExpectedData(MyForm, { a: 42 }, done);
+      renderAndExpect(MyForm, { a: 42 }, done);
     });
 
     it('should be able to return values from checkboxes', function (done) {
@@ -34,7 +35,7 @@ describe('formdata', function () {
           <p><input id="c" type="checkbox" readOnly="readOnly" checked="checked"/></p>
         </div>
       );
-      renderComponentWithExpectedData(MyForm, {
+      renderAndExpect(MyForm, {
         a: true,
         b: false,
         c: true
@@ -49,7 +50,7 @@ describe('formdata', function () {
           <p><input name="x" type="radio" value="c" readOnly="readOnly" checked="checked"/></p>
         </div>
       );
-      renderComponentWithExpectedData(MyForm, {
+      renderAndExpect(MyForm, {
         x: 'c'
       }, done);
     });
@@ -62,7 +63,7 @@ describe('formdata', function () {
           <p><input name="x" type="radio" value="c" readOnly="readOnly" checked="checked"/></p>
         </div>
       );
-      renderComponentWithExpectedData(MyForm, {
+      renderAndExpect(MyForm, {
         z: 'c'
       }, done);
     });
@@ -75,7 +76,7 @@ describe('formdata', function () {
           <p><input name="x" type="radio" value="c" readOnly="readOnly" checked="checked"/></p>
         </div>
       );
-      renderComponentWithExpectedData(MyForm, {
+      renderAndExpect(MyForm, {
         x: 'c'
       }, done);
     });
@@ -88,14 +89,50 @@ describe('formdata', function () {
           <p><input name="x" type="radio" value="c" readOnly="readOnly"/></p>
         </div>
       );
-      renderComponentWithExpectedData(MyForm, {
+      renderAndExpect(MyForm, {
         z: 'b'
       }, done);
     });
   });
+
+  describe('mapping', function () {
+    it('should respect mapping on mount', function (done) {
+      const expected = { a: 'HELLO WORLD' };
+      const mapper = data => ({ a: data.a.toUpperCase() });
+      const MyForm = formData(() =>
+        <p><input id="a" type="text" readOnly="readOnly" value="Hello World"/></p>
+      );
+
+      const refListener = function (ref) {
+        assert.deepEqual(ref.getValues(), expected);
+        done();
+      };
+      renderIntoDocument(<MyForm ref={refListener} valueMapper={mapper} />);
+    });
+
+    it('should respect mapping on change', function (done) {
+      const expected = { a: 'HELLO WORLD' };
+      const mapper = data => ({ a: data.a.toUpperCase() });
+      const MyForm = formData(({ocHook}) =>
+        <p><input id="a" type="text" onChange={ocHook} value=""/></p>
+      );
+
+      const onChangeListener = function (data) {
+        assert.deepEqual(data, expected);
+        done();
+      };
+
+      const out = renderIntoDocument(<MyForm
+          onChange={onChangeListener}
+          valueMapper={mapper} />);
+      const node = findDOMNode(out).querySelector('input');
+      node.value = 'Hello World';
+      Simulate.change(node);
+    });
+  });
 });
 
-function renderComponentWithExpectedData (Component, data, done) {
+function renderAndExpect (Component, data, done) {
   const refListener = function (ref) {
     assert.deepEqual(ref.getValues(), data);
     done();
