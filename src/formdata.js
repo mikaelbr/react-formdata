@@ -126,7 +126,6 @@ function formData (ChildComponent) {
 function getValuesFromInputs (inputs, extra = {}) {
   const extraList = toList(extra);
   const both = inputs.concat(extraList);
-
   const fromInputs = inputs
     .filter(includableInput)
     .filter(includeItemsNotInList(extraList))
@@ -157,25 +156,30 @@ function isInList (list, {name, id}) {
      name === oName || id === oId);
 }
 
-function logEachNameOrId (inputs = []) {
-  inputs.forEach(({id, name}) =>
-    console.log('Id:', id, 'Name:', name));
-}
-
 function noop () { }
 function identity (i) { return i; }
 
 function getTypedValue (input, list) {
-  if (input.type && input.type === 'number') {
+  if (input.type === 'number') {
     return parseInt(input.value, 10);
   }
-  if (input.type && input.type === 'checkbox') {
+  if (input.type === 'checkbox') {
     return input.checked;
   }
-  if (input.type && input.type === 'radio') {
+  if (input.type === 'radio') {
     return getCheckedItemFromListWithName(list, input.name);
   }
+  if (isTag(input, 'select')) {
+    return getValueFromSelect(input);
+  }
   return input.value;
+}
+
+function getValueFromSelect (select) {
+  if (!select.multiple) return select.value;
+  return [...select.querySelectorAll('option')]
+    .filter(item => item.selected)
+    .map(item => item.value);
 }
 
 function getCheckedItemFromListWithName (list, name) {
@@ -184,6 +188,11 @@ function getCheckedItemFromListWithName (list, name) {
     .map(item => item.value);
   if (!selected || !selected.length) return void 0;
   return selected[0];
+}
+
+function isTag ({tagName}, expectedTagName) {
+  return tagName &&
+    tagName.toLowerCase() === expectedTagName.toLowerCase();
 }
 
 function toList (obj) {

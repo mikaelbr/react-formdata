@@ -13,6 +13,34 @@ describe('formdata', function () {
       renderAndExpect(MyForm, { a: 'Hello World' }, done);
     });
 
+    it('should be able to return values from select', function (done) {
+      const MyForm = formData(() =>
+        <div>
+          <select value="a" id="a">
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+      );
+      renderAndExpect(MyForm, { a: 'a' }, done);
+    });
+
+    it('should be able to return values from select with multiple values', function (done) {
+      const MyForm = formData(() =>
+        <div>
+          <select id="input" value={['b', 'c']} multiple={true}>
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+      );
+      renderAndExpect(MyForm, {
+        input: ['b', 'c']
+      }, done);
+    });
+
     it('should be able to return values from textarea', function (done) {
       const MyForm = formData(() =>
         <p><textarea id="a" readOnly="readOnly" value="Hello World"></textarea></p>
@@ -109,6 +137,43 @@ describe('formdata', function () {
         <p><input id="a" onChange={ocHook} type="text" value="Hello World"/></p>
       );
       renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done);
+    });
+
+    it('should be able to return values from select', function (done) {
+      const expected = 'b';
+      const MyForm = formData(({ocHook}) =>
+        <div>
+          <select value="a" id="a" onChange={ocHook}>
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+      );
+      renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done, 'select');
+    });
+
+    it('should be able to return values from select with multiple values', function (done) {
+      const MyForm = formData(({ocHook}) =>
+        <div>
+          <select id="input" value={['a']} onChange={ocHook} multiple={true}>
+            <option onChange={ocHook} value="a">A</option>
+            <option onChange={ocHook} value="b">B</option>
+            <option onChange={ocHook} value="c">C</option>
+          </select>
+        </div>
+      );
+
+      const out = renderAndExpectOnChange(MyForm, {
+        input: ['b', 'c']
+      }, done);
+
+      const select = findDOMNode(out).querySelector('select');
+      const inputs = [...findDOMNode(out).querySelectorAll('option')];
+      inputs.forEach(function (item, index) {
+        item.selected = index !== 0;
+      });
+      Simulate.change(select);
     });
 
     it('should be able to return values from textarea', function (done) {
