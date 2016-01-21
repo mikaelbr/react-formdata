@@ -251,6 +251,25 @@ describe('formdata', function () {
       Simulate.change(node);
     });
 
+    it('should be able to return all values from multi-checkboxes', function (done) {
+      const MyForm = formData(({ocHook}) =>
+        <div>
+          <p><input name="foo[]" onChange={ocHook} value="a" type="checkbox" readOnly="readOnly" checked="checked"/></p>
+          <p><input name="foo[]" onChange={ocHook} type="checkbox" value="b" readOnly="readOnly" /></p>
+          <p><input name="foo[]" onChange={ocHook} type="checkbox" value="c" readOnly="readOnly" checked="checked"/></p>
+        </div>
+      );
+
+      var out = renderAndExpectOnChange(MyForm, {
+        foo: ['a', 'b', 'c']
+      }, done);
+
+      const node = findDOMNode(out).querySelectorAll('input')[1];
+      node.checked = true;
+      Simulate.change(node);
+
+    });
+
     it('should be able to return values from radios grouped by name', function (done) {
       const MyForm = formData(({ocHook}) =>
         <div>
