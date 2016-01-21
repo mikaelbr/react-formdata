@@ -96,6 +96,19 @@ describe('formdata', function () {
       }, done);
     });
 
+    it('should be able to return all values from multi-checkboxes', function (done) {
+      const MyForm = formData(() =>
+        <div>
+          <p><input name="foo[]" value="a" type="checkbox" readOnly="readOnly" checked="checked"/></p>
+          <p><input name="foo[]" type="checkbox"  value="b"  readOnly="readOnly" /></p>
+          <p><input name="foo[]" type="checkbox"  value="c" readOnly="readOnly" checked="checked"/></p>
+        </div>
+      );
+      renderAndExpect(MyForm, {
+        foo: ['a', 'c']
+      }, done);
+    });
+
     it('should be able to return values from radios grouped by name', function (done) {
       const MyForm = formData(() =>
         <div>

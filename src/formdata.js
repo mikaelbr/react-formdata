@@ -133,15 +133,20 @@ function getValuesFromInputs (inputs, extra = {}) {
     .filter(includeItemsNotInList(extraList))
     .reduce((acc, input) =>
       Object.assign({}, acc, {
-        [input.name || input.id]: getTypedValue(input, both)
+        [filterKey(input.name || input.id)]: getTypedValue(input, both)
       }), {});
 
   const fromExtra = Object.keys(extra).reduce((acc, key) =>
     Object.assign({}, acc, {
-      [key]: getTypedValue(extra[key], both)
+      [filterKey(key)]: getTypedValue(extra[key], both)
     }), {});
 
   return Object.assign({}, fromInputs, fromExtra);
+}
+
+function filterKey (key) {
+  if (key.indexOf('[]') === -1) return key;
+  return key.replace('[]', '');
 }
 
 function includableInput ({ type, id, name }) {
@@ -165,6 +170,9 @@ function getTypedValue (input, list) {
   if (input.type === 'number') {
     return parseInt(input.value, 10);
   }
+  if (input.type === 'checkbox' && input.name.indexOf('[]') !== -1) {
+    return getAllCheckedItemFromListWithName(list, input.name);
+  }
   if (input.type === 'checkbox') {
     return input.checked;
   }
@@ -184,12 +192,17 @@ function getValueFromSelect (select) {
     .map(item => item.value);
 }
 
-function getCheckedItemFromListWithName (list, name) {
-  var selected = list
+
+function getAllCheckedItemFromListWithName (list, name) {
+  return list
     .filter(item => item.checked && item.name === name)
     .map(item => item.value);
-  if (!selected || !selected.length) return void 0;
-  return selected[0];
+}
+
+function getCheckedItemFromListWithName (list, name) {
+  var data = getAllCheckedItemFromListWithName(list, name);
+  if (!data) return data;
+  return data[0];
 }
 
 function isTag ({tagName}, expectedTagName) {
