@@ -160,7 +160,7 @@ function includeItemsNotInList (list) {
 
 function isInList (list, {name, id}) {
   return list.some(({name: oName, id: oId}) =>
-     name && id && (name === oName || id === oId));
+     (name && name === oName) || (id && id === oId));
 }
 
 function noop () { }
