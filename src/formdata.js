@@ -109,16 +109,24 @@ function formData (ChildComponent) {
 
     getValues: function () {
       const { valueMapper = identity } = this.props;
-      return valueMapper(getValuesFromInputs(this.getInputs(), this.customInputs));
+      const values = getValuesFromInputs(this.getInputs(), this.customInputs);
+      return valueMapper(Object.assign({}, values, this.customData || {}));
     },
 
     render: function () {
       const { onChange = noop } = this.props;
       return React.createElement(ChildComponent, Object.assign({}, this.props, {
         addInput: this.addInput,
-        ocHook: (e) => {
+        ocHook: e => {
           onChange(this.getValues());
           return e;
+        },
+        customChange: data => {
+          if (!this.customData) { this.customData = {}; }
+          this.customData = Object.assign({}, this.customData, data);
+          const resultingData = this.getValues();
+          onChange(resultingData);
+          return resultingData;
         }
       }));
     }

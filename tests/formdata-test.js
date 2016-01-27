@@ -178,6 +178,54 @@ describe('formdata', function () {
       renderAndExpectWhenChangeTriggered(MyForm, { a: expected }, expected, done);
     });
 
+    it('should be able to custom trigger change by custom data', function (done) {
+      const expected = 'Foobar';
+      let numCalls = 0;
+      const MyForm = formData(function ({title, ocHook, customChange}) {
+        setTimeout(() => customChange({
+          someData: 5
+        }), 0);
+        setTimeout(() => customChange({
+          anotherData: 10
+        }), 10);
+        return (
+          <p><input id="a" onChange={ocHook} type="text" value={title} /></p>
+        );
+      });
+
+      const out = renderIntoDocument(<MyForm title="Hello World" onChange={function (data) {
+        ++numCalls;
+        if (numCalls === 1) {
+          assert.deepEqual(data, {
+            a: 'Hello World',
+            someData: 5
+          });
+        }
+        if (numCalls === 2) {
+          assert.deepEqual(data, {
+            a: 'Hello World',
+            someData: 5,
+            anotherData: 10
+          });
+        }
+        if (numCalls === 3) {
+          assert.deepEqual(data, {
+            a: expected,
+            someData: 5,
+            anotherData: 10
+          });
+          done();
+        }
+      }} />);
+
+      const node = findDOMNode(out).querySelector('input');
+
+      setTimeout(function () {
+        node.value = expected;
+        Simulate.change(node);
+      }, 20);
+    });
+
     it('should be able to return values from select', function (done) {
       const expected = 'b';
       const MyForm = formData(({ocHook}) =>
