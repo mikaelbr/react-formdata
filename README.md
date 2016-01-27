@@ -32,6 +32,7 @@ The precedence order for naming is: `Manual > Name attribute > ID attribute`
 Injects the following properties to the decorated component.
 * `addInput(inputName)` - Manually add input, with data name specified as argument
 * `ocHook(synteticEvent)` - onChange hook. Use this when you want onChange to be triggered. Most cases every input in your decoratee should have a `onChange={ocHook}`. Is composable
+* `customChange(Object)` - Add custom data to the onChange trigger.
 
 **Kind**: global function  
 **Returns**: <code>Component</code> - Decorated Component - The newly derived component with additional behaviour.  

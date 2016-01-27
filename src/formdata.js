@@ -78,6 +78,7 @@ function formData (ChildComponent) {
    * Decorated component has two props callbacks you can use:
    * * `valueMapper(Object) -> Object` - Takes values and returns new mapped values. If you want to transform some of the data before triggering `onChange` or `getData`.
    * * `onChange(Object)` - callback triggered when some of the decoratee triggers the on change hook. Is called with data values as argument.
+   * * `customChange(Object)` - Add custom data to the onChange trigger.
    *
    * In addition to props, you can use React refs to get the initial value when component is mounted:
    * @example
