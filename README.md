@@ -44,8 +44,10 @@ Injects the following properties to the decorated component.
 **Example**  
 Using onChange hook to aggregate and create a common onChange listener with data
 ```jsx
+var formData = require('react-formdata');
+
 // `ocHook` is injected from `formData`:
-var MyForm = formData(function ({ addInput, ocHook }) {
+var DecoratedMyForm = formData(function ({ addInput, ocHook }) {
   return (
     <ol>
       <li><input id="a" type="text" onChange={ocHook} value="Hello World" /></li>
