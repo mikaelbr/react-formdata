@@ -69,7 +69,7 @@ module.exports = formData;
  * @param {Component} Decoratee - component you'd like to decorate with form data behaviour.
  * @returns {Component} Decorated Component - The newly derived component with additional behaviour.
  **/
-function formData (ChildComponent) {
+function formData(ChildComponent) {
   /**
    * formData decorated `Component`. A React Component with the added behaviour of form data handling.
    * All properties passed to decorated component, is transitive. This means it will be passed to the
@@ -94,88 +94,115 @@ function formData (ChildComponent) {
    * ```
    * @param Properties - Properties to react component
    **/
-  return React.createClass({
+  return class ReactFormData extends React.Component {
+    constructor(props) {
+      super(props);
+      this.customInputs = {};
+      this.formIsMounted = false;
+    }
 
-    addInput: function (name) {
-      return (ref) => {
-        if (!this.customInputs) { this.customInputs = {}; }
+    addInput(name) {
+      return ref => {
         this.customInputs[name] = ref;
       };
-    },
+    }
 
-    getInputs: function () {
+    getInputs() {
+      if (!this.formIsMounted) return [];
       const root = findDOMNode(this);
       return [...root.querySelectorAll('input, select, textarea')];
-    },
+    }
 
-    getValues: function () {
+    componentDidMount() {
+      this.formIsMounted = true;
+    }
+
+    componentWillUnmount() {
+      this.formIsMounted = false;
+    }
+
+    getValues() {
       const { valueMapper = identity } = this.props;
       const values = getValuesFromInputs(this.getInputs(), this.customInputs);
       return valueMapper(Object.assign({}, values, this.customData || {}));
-    },
-
-    render: function () {
-      const { onChange = noop } = this.props;
-      return React.createElement(ChildComponent, Object.assign({}, this.props, {
-        addInput: this.addInput,
-        ocHook: e => {
-          onChange(this.getValues());
-          return e;
-        },
-        customChange: data => {
-          if (!this.customData) { this.customData = {}; }
-          this.customData = Object.assign({}, this.customData, data);
-          const resultingData = this.getValues();
-          onChange(resultingData);
-          return resultingData;
-        }
-      }));
     }
-  });
+
+    render() {
+      const { onChange = noop } = this.props;
+      return React.createElement(
+        ChildComponent,
+        Object.assign({}, this.props, {
+          addInput: name => this.addInput(name),
+          ocHook: e => {
+            onChange(this.getValues());
+            return e;
+          },
+          customChange: data => {
+            if (!this.customData) {
+              this.customData = {};
+            }
+            this.customData = Object.assign({}, this.customData, data);
+            const resultingData = this.getValues();
+            onChange(resultingData);
+            return resultingData;
+          }
+        })
+      );
+    }
+  };
 }
 
-function getValuesFromInputs (inputs, extra = {}) {
+function getValuesFromInputs(inputs, extra = {}) {
   const extraList = toList(extra);
   const both = inputs.concat(extraList);
   const fromInputs = inputs
     .filter(includableInput)
     .filter(includeItemsNotInList(extraList))
-    .reduce((acc, input) =>
-      Object.assign({}, acc, {
-        [filterKey(input.name || input.id)]: getTypedValue(input, both)
-      }), {});
+    .reduce(
+      (acc, input) =>
+        Object.assign({}, acc, {
+          [filterKey(input.name || input.id)]: getTypedValue(input, both)
+        }),
+      {}
+    );
 
-  const fromExtra = Object.keys(extra).reduce((acc, key) =>
-    Object.assign({}, acc, {
-      [filterKey(key)]: getTypedValue(extra[key], both)
-    }), {});
+  const fromExtra = Object.keys(extra).reduce(
+    (acc, key) =>
+      Object.assign({}, acc, {
+        [filterKey(key)]: getTypedValue(extra[key], both)
+      }),
+    {}
+  );
 
   return Object.assign({}, fromInputs, fromExtra);
 }
 
-function filterKey (key) {
+function filterKey(key) {
   if (key.indexOf('[]') === -1) return key;
   return key.replace('[]', '');
 }
 
-function includableInput ({ type, id, name }) {
+function includableInput({ type, id, name }) {
   const hasNameOrId = !!id || !!name;
   return hasNameOrId && type !== 'submit' && type !== 'button';
 }
 
-function includeItemsNotInList (list) {
-  return (item) => !isInList(list, item);
+function includeItemsNotInList(list) {
+  return item => !isInList(list, item);
 }
 
-function isInList (list, {name, id}) {
-  return list.some(({name: oName, id: oId}) =>
-     (name && name === oName) || (id && id === oId));
+function isInList(list, { name, id }) {
+  return list.some(
+    ({ name: oName, id: oId }) => (name && name === oName) || (id && id === oId)
+  );
 }
 
-function noop () { }
-function identity (i) { return i; }
+function noop() {}
+function identity(i) {
+  return i;
+}
 
-function getTypedValue (input, list) {
+function getTypedValue(input, list) {
   if (input.type === 'number') {
     return parseInt(input.value, 10);
   }
@@ -194,31 +221,29 @@ function getTypedValue (input, list) {
   return input.value;
 }
 
-function getValueFromSelect (select) {
+function getValueFromSelect(select) {
   if (!select.multiple) return select.value;
   return [...select.querySelectorAll('option')]
     .filter(item => item.selected)
     .map(item => item.value);
 }
 
-
-function getAllCheckedItemFromListWithName (list, name) {
+function getAllCheckedItemFromListWithName(list, name) {
   return list
     .filter(item => item.checked && item.name === name)
     .map(item => item.value);
 }
 
-function getCheckedItemFromListWithName (list, name) {
+function getCheckedItemFromListWithName(list, name) {
   var data = getAllCheckedItemFromListWithName(list, name);
   if (!data) return data;
   return data[0];
 }
 
-function isTag ({tagName}, expectedTagName) {
-  return tagName &&
-    tagName.toLowerCase() === expectedTagName.toLowerCase();
+function isTag({ tagName }, expectedTagName) {
+  return tagName && tagName.toLowerCase() === expectedTagName.toLowerCase();
 }
 
-function toList (obj) {
+function toList(obj) {
   return Object.keys(obj).map(k => obj[k]);
 }
