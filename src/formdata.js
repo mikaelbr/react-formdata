@@ -1,5 +1,4 @@
 const React = require('react');
-const { findDOMNode } = require('react-dom');
 
 module.exports = formData;
 
@@ -108,9 +107,8 @@ function formData(ChildComponent) {
     }
 
     getInputs() {
-      if (!this.formIsMounted) return [];
-      const root = findDOMNode(this);
-      return [...root.querySelectorAll('input, select, textarea')];
+      if ((!this.formIsMounted) || (!this.wrapperRef)) return [];
+      return [...this.wrapperRef.querySelectorAll('input, select, textarea')];
     }
 
     componentDidMount() {
@@ -129,7 +127,7 @@ function formData(ChildComponent) {
 
     render() {
       const { onChange = noop } = this.props;
-      return React.createElement(
+      const decoratedElement = React.createElement(
         ChildComponent,
         Object.assign({}, this.props, {
           addInput: name => this.addInput(name),
@@ -148,6 +146,11 @@ function formData(ChildComponent) {
           }
         })
       );
+      return (
+        <div ref={el => this.wrapperRef = el}>
+          {decoratedElement}
+        </div>
+      )
     }
   };
 }
