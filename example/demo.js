@@ -1,15 +1,27 @@
-var formData = require('../src/formData');
-var { render } = require('react-dom');
+var formData = require("../src/formData");
+var { render } = require("react-dom");
+var React = require("react");
 
-function MyForm ({ title, ocHook }) {
+function MyForm({ title, ocHook }) {
   return (
     <form>
       <fieldset>
         <legend>{title}</legend>
         <ol>
-          <li><input id="a" type="text" placeholder="Text" onChange={ocHook} /></li>
-          <li><input id="b" type="number" placeholder="Number" onChange={ocHook} /></li>
-          <li><textarea id="c" placeholder="Number" onChange={ocHook}></textarea></li>
+          <li>
+            <input id="a" type="text" placeholder="Text" onChange={ocHook} />
+          </li>
+          <li>
+            <input
+              id="b"
+              type="number"
+              placeholder="Number"
+              onChange={ocHook}
+            />
+          </li>
+          <li>
+            <textarea id="c" placeholder="Number" onChange={ocHook}></textarea>
+          </li>
           <li>
             <select id="d" onChange={ocHook}>
               <option value="hello">Hello</option>
@@ -36,19 +48,22 @@ function MyForm ({ title, ocHook }) {
 
 const DecoratedMyForm = formData(MyForm);
 
-const App = function () {
+const App = function() {
   return (
     <div>
       <h1>My App</h1>
       <DecoratedMyForm
         title="My Little Form"
-        valueMapper={values => Object.assign({}, values, {
-          hidden: 'Override'
-        })}
+        valueMapper={values =>
+          Object.assign({}, values, {
+            hidden: "Override"
+          })
+        }
         ref={e => console.log(e.getValues())}
-        onChange={(values) => console.log(values)} />
+        onChange={values => console.log(values)}
+      />
     </div>
   );
 };
 
-render(<App />, document.querySelector('#app'));
+render(<App />, document.querySelector("#app"));
