@@ -1,13 +1,12 @@
-const jsdom = require('jsdom');
+const jsdom = require("jsdom");
 
-const doc = jsdom.jsdom('<!doctype html><html><body></body></html>');
-const win = doc.defaultView;
+const dom = new jsdom.JSDOM("<!doctype html><html><body></body></html>", {
+  url: "http://localhost"
+});
+global.window = dom.window;
 
-global.document = doc;
-global.window = win;
-
-Object.keys(window).forEach((key) => {
+for (var key in dom.window) {
   if (!(key in global)) {
     global[key] = window[key];
   }
-});
+}

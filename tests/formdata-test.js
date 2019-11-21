@@ -1,12 +1,13 @@
-const { assert } = require('chai');
-const { renderIntoDocument, Simulate } = require('react-dom/test-utils');
-const { findDOMNode } = require('react-dom');
+const { assert } = require("chai");
+const React = require("react");
+const { renderIntoDocument, Simulate } = require("react-dom/test-utils");
+const { findDOMNode } = require("react-dom");
 
-const formData = require('../src/formdata');
+const formData = require("../src/formdata");
 
-describe('formdata', function() {
-  describe('on mount', function() {
-    it('should include all inputs with name', function(done) {
+describe("formdata", function() {
+  describe("on mount", function() {
+    it("should include all inputs with name", function(done) {
       const MyForm = formData(() => (
         <p>
           <input name="a" type="text" readOnly="readOnly" value="Hello World" />
@@ -16,14 +17,14 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          a: 'Hello World',
-          b: 'Bye World'
+          a: "Hello World",
+          b: "Bye World"
         },
         done
       );
     });
 
-    it('should include all inputs with id', function(done) {
+    it("should include all inputs with id", function(done) {
       const MyForm = formData(() => (
         <p>
           <input id="a" type="text" readOnly="readOnly" value="Hello World" />
@@ -33,23 +34,23 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          a: 'Hello World',
-          b: 'Bye World'
+          a: "Hello World",
+          b: "Bye World"
         },
         done
       );
     });
 
-    it('should be able to return values from text', function(done) {
+    it("should be able to return values from text", function(done) {
       const MyForm = formData(() => (
         <p>
           <input id="a" type="text" readOnly="readOnly" value="Hello World" />
         </p>
       ));
-      renderAndExpect(MyForm, { a: 'Hello World' }, done);
+      renderAndExpect(MyForm, { a: "Hello World" }, done);
     });
 
-    it('should be able to return values from select', function(done) {
+    it("should be able to return values from select", function(done) {
       const MyForm = formData(() => (
         <div>
           <select value="a" id="a" readOnly="readOnly">
@@ -59,15 +60,15 @@ describe('formdata', function() {
           </select>
         </div>
       ));
-      renderAndExpect(MyForm, { a: 'a' }, done);
+      renderAndExpect(MyForm, { a: "a" }, done);
     });
 
-    it('should be able to return values from select with multiple values', function(done) {
+    it("should be able to return values from select with multiple values", function(done) {
       const MyForm = formData(() => (
         <div>
           <select
             id="input"
-            value={['b', 'c']}
+            value={["b", "c"]}
             readOnly="readOnly"
             multiple={true}
           >
@@ -80,22 +81,22 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          input: ['b', 'c']
+          input: ["b", "c"]
         },
         done
       );
     });
 
-    it('should be able to return values from textarea', function(done) {
+    it("should be able to return values from textarea", function(done) {
       const MyForm = formData(() => (
         <p>
           <textarea id="a" readOnly="readOnly" value="Hello World" />
         </p>
       ));
-      renderAndExpect(MyForm, { a: 'Hello World' }, done);
+      renderAndExpect(MyForm, { a: "Hello World" }, done);
     });
 
-    it('should be able to return values from number', function(done) {
+    it("should be able to return values from number", function(done) {
       const MyForm = formData(() => (
         <p>
           <input id="a" type="number" readOnly="readOnly" value="42" />
@@ -104,7 +105,7 @@ describe('formdata', function() {
       renderAndExpect(MyForm, { a: 42 }, done);
     });
 
-    it('should be able to return values from checkboxes', function(done) {
+    it("should be able to return values from checkboxes", function(done) {
       const MyForm = formData(() => (
         <div>
           <p>
@@ -139,7 +140,7 @@ describe('formdata', function() {
       );
     });
 
-    it('should be able to return all values from multi-checkboxes', function(done) {
+    it("should be able to return all values from multi-checkboxes", function(done) {
       const MyForm = formData(() => (
         <div>
           <p>
@@ -168,13 +169,13 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          foo: ['a', 'c']
+          foo: ["a", "c"]
         },
         done
       );
     });
 
-    it('should be able to return values from radios grouped by name', function(done) {
+    it("should be able to return values from radios grouped by name", function(done) {
       const MyForm = formData(() => (
         <div>
           <p>
@@ -197,19 +198,19 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          x: 'c'
+          x: "c"
         },
         done
       );
     });
 
-    it('should be able to return values from radios grouped by name overriden by addInput', function(done) {
+    it("should be able to return values from radios grouped by name overriden by addInput", function(done) {
       const MyForm = formData(({ addInput }) => (
         <div>
           <p>
             <input
               name="x"
-              ref={addInput('z')}
+              ref={addInput("z")}
               type="radio"
               value="a"
               readOnly="readOnly"
@@ -232,13 +233,13 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          z: 'c'
+          z: "c"
         },
         done
       );
     });
 
-    it('should be able to return values from radios grouped by name even if id is present', function(done) {
+    it("should be able to return values from radios grouped by name even if id is present", function(done) {
       const MyForm = formData(() => (
         <div>
           <p>
@@ -261,13 +262,13 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          x: 'c'
+          x: "c"
         },
         done
       );
     });
 
-    it('should be able to return values from radios grouped by name overriden by addInput not dependent on order', function(done) {
+    it("should be able to return values from radios grouped by name overriden by addInput not dependent on order", function(done) {
       const MyForm = formData(({ addInput }) => (
         <div>
           <p>
@@ -276,7 +277,7 @@ describe('formdata', function() {
           <p>
             <input
               name="x"
-              ref={addInput('z')}
+              ref={addInput("z")}
               type="radio"
               value="b"
               checked="checked"
@@ -291,13 +292,13 @@ describe('formdata', function() {
       renderAndExpect(
         MyForm,
         {
-          z: 'b'
+          z: "b"
         },
         done
       );
     });
 
-    it('should allow name to take precedence over id', function(done) {
+    it("should allow name to take precedence over id", function(done) {
       const MyForm = formData(() => (
         <p>
           <input
@@ -309,13 +310,13 @@ describe('formdata', function() {
           />
         </p>
       ));
-      renderAndExpect(MyForm, { z: 'Hello World' }, done);
+      renderAndExpect(MyForm, { z: "Hello World" }, done);
     });
   });
 
-  describe('onChange', function() {
-    it('should be able to return values from text', function(done) {
-      const expected = 'Foobar';
+  describe("onChange", function() {
+    it("should be able to return values from text", function(done) {
+      const expected = "Foobar";
       const MyForm = formData(({ ocHook }) => (
         <p>
           <input id="a" onChange={ocHook} type="text" value="Hello World" />
@@ -329,8 +330,8 @@ describe('formdata', function() {
       );
     });
 
-    it('should be able to custom trigger change by custom data', function(done) {
-      const expected = 'Foobar';
+    it("should be able to custom trigger change by custom data", function(done) {
+      const expected = "Foobar";
       let numCalls = 0;
       const MyForm = formData(function({ title, ocHook, customChange }) {
         setTimeout(
@@ -361,13 +362,13 @@ describe('formdata', function() {
             ++numCalls;
             if (numCalls === 1) {
               assert.deepEqual(data, {
-                a: 'Hello World',
+                a: "Hello World",
                 someData: 5
               });
             }
             if (numCalls === 2) {
               assert.deepEqual(data, {
-                a: 'Hello World',
+                a: "Hello World",
                 someData: 5,
                 anotherData: 10
               });
@@ -384,7 +385,7 @@ describe('formdata', function() {
         />
       );
 
-      const node = findDOMNode(out).querySelector('input');
+      const node = findDOMNode(out).querySelector("input");
 
       setTimeout(function() {
         node.value = expected;
@@ -392,8 +393,8 @@ describe('formdata', function() {
       }, 20);
     });
 
-    it('should be able to return values from select', function(done) {
-      const expected = 'b';
+    it("should be able to return values from select", function(done) {
+      const expected = "b";
       const MyForm = formData(({ ocHook }) => (
         <div>
           <select value="a" id="a" onChange={ocHook}>
@@ -408,14 +409,14 @@ describe('formdata', function() {
         { a: expected },
         expected,
         done,
-        'select'
+        "select"
       );
     });
 
-    it('should be able to return values from select with multiple values', function(done) {
+    it("should be able to return values from select with multiple values", function(done) {
       const MyForm = formData(({ ocHook }) => (
         <div>
-          <select id="input" value={['a']} onChange={ocHook} multiple={true}>
+          <select id="input" value={["a"]} onChange={ocHook} multiple={true}>
             <option onChange={ocHook} value="a">
               A
             </option>
@@ -432,21 +433,21 @@ describe('formdata', function() {
       const out = renderAndExpectOnChange(
         MyForm,
         {
-          input: ['b', 'c']
+          input: ["b", "c"]
         },
         done
       );
 
-      const select = findDOMNode(out).querySelector('select');
-      const inputs = [...findDOMNode(out).querySelectorAll('option')];
+      const select = findDOMNode(out).querySelector("select");
+      const inputs = [...findDOMNode(out).querySelectorAll("option")];
       inputs.forEach(function(item, index) {
         item.selected = index !== 0;
       });
       Simulate.change(select);
     });
 
-    it('should be able to return values from textarea', function(done) {
-      const expected = 'Foobar';
+    it("should be able to return values from textarea", function(done) {
+      const expected = "Foobar";
       const MyForm = formData(({ ocHook }) => (
         <p>
           <textarea id="a" onChange={ocHook} value="Hello World" />
@@ -457,11 +458,11 @@ describe('formdata', function() {
         { a: expected },
         expected,
         done,
-        'textarea'
+        "textarea"
       );
     });
 
-    it('should be able to return values from number', function(done) {
+    it("should be able to return values from number", function(done) {
       const expected = 50;
       const MyForm = formData(({ ocHook }) => (
         <p>
@@ -476,7 +477,7 @@ describe('formdata', function() {
       );
     });
 
-    it('should be able to return values from checkboxes', function(done) {
+    it("should be able to return values from checkboxes", function(done) {
       const MyForm = formData(({ ocHook }) => (
         <div>
           <p>
@@ -501,12 +502,12 @@ describe('formdata', function() {
         done
       );
 
-      const node = findDOMNode(out).querySelector('#b');
+      const node = findDOMNode(out).querySelector("#b");
       node.checked = true;
       Simulate.change(node);
     });
 
-    it('should be able to return all values from multi-checkboxes', function(done) {
+    it("should be able to return all values from multi-checkboxes", function(done) {
       const MyForm = formData(({ ocHook }) => (
         <div>
           <p>
@@ -544,17 +545,17 @@ describe('formdata', function() {
       var out = renderAndExpectOnChange(
         MyForm,
         {
-          foo: ['a', 'b', 'c']
+          foo: ["a", "b", "c"]
         },
         done
       );
 
-      const node = findDOMNode(out).querySelectorAll('input')[1];
+      const node = findDOMNode(out).querySelectorAll("input")[1];
       node.checked = true;
       Simulate.change(node);
     });
 
-    it('should be able to return values from radios grouped by name', function(done) {
+    it("should be able to return values from radios grouped by name", function(done) {
       const MyForm = formData(({ ocHook }) => (
         <div>
           <p>
@@ -578,20 +579,20 @@ describe('formdata', function() {
       const out = renderAndExpectOnChange(
         MyForm,
         {
-          x: 'b'
+          x: "b"
         },
         done
       );
 
-      const node = findDOMNode(out).querySelector('#b');
+      const node = findDOMNode(out).querySelector("#b");
       node.checked = true;
       Simulate.change(node);
     });
   });
 
-  describe('mapping', function() {
-    it('should respect mapping on mount', function(done) {
-      const expected = { a: 'HELLO WORLD' };
+  describe("mapping", function() {
+    it("should respect mapping on mount", function(done) {
+      const expected = { a: "HELLO WORLD" };
       const mapper = data => ({ a: data.a.toUpperCase() });
       const MyForm = formData(() => (
         <p>
@@ -606,8 +607,8 @@ describe('formdata', function() {
       renderIntoDocument(<MyForm ref={refListener} valueMapper={mapper} />);
     });
 
-    it('should respect mapping on change', function(done) {
-      const expected = { a: 'HELLO WORLD' };
+    it("should respect mapping on change", function(done) {
+      const expected = { a: "HELLO WORLD" };
       const mapper = data => ({ a: data.a.toUpperCase() });
       const MyForm = formData(({ ocHook }) => (
         <p>
@@ -623,8 +624,8 @@ describe('formdata', function() {
       const out = renderIntoDocument(
         <MyForm onChange={onChangeListener} valueMapper={mapper} />
       );
-      const node = findDOMNode(out).querySelector('input');
-      node.value = 'Hello World';
+      const node = findDOMNode(out).querySelector("input");
+      node.value = "Hello World";
       Simulate.change(node);
     });
   });
@@ -643,7 +644,7 @@ function renderAndExpectWhenChangeTriggered(
   expected,
   change,
   done,
-  type = 'input'
+  type = "input"
 ) {
   const onChangeListener = function(data) {
     assert.deepEqual(data, expected);

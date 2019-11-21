@@ -3,4 +3,5 @@ node_modules
 
 
 lib/*
-example/example.js
+example/.cache
+example/dist
